@@ -41,7 +41,7 @@
 
 ### 1.4 HDFS 架构
 
-[!HDFS架构图](/image/HDFS架构图.png)
+![HDFS架构图](/image/HDFS架构图.png)
 
 
 
