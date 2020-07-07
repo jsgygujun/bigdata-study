@@ -43,6 +43,69 @@
 
 ![HDFS架构图](/image/HDFS架构图.png)
 
+这种结构主要由四个部分组成：HDSF Client、NameNode、DataNode和Secondary NameNode。
+1. Client： 客户端
+   1. 文件切分。文件在上传HDFS的时候，Client将文件切分称一个一个的Block，然后进行存储。
+   2. 与NameNode交互，获取文件的位置信息。
+   3. 与DataNode交互，读取或者写入数据。
+   4. Client提供了一些命令来管理HDFS，比如启动或者关闭HDFS。
+   5. Client可以通过一些命令来访问HDFS
+2. NameNode: Master，管理者
+   1. 管理HDFS的名称空间。
+   2. 管理数据块(Block)映射信息。
+   3. 配置副本策略。
+   4. 处理客户端读写请求。
+3. DataNode: Slave，NameNode下达命令，DataNode执行实际的操作。
+   1. 存储实际的数据块。
+   2. 执行数据块的读写操作。
+4. Secondary NameNode: 并不是NameNode的热备。当NameNode挂掉的时候，它并不能马上替换NameNode并提供服务。
+   1. 辅助NameNode，分担其工作量。
+   2. 定期合并Fsimage和Edits，并推送给NameNode。
+   3. 在紧急情况下，可辅助恢复NameNode。
+
+## 二、HDFS命令行操作
+
+基本语法： bin/hadoop fs 具体命令
+
+常用命令实践：
+
+1. 启动Hadoop集群
+
+   ```shell
+   sbin/start-dfs.sh
+   sbin/start-yarn.sh
+   ```
+
+2. -help: 查找命令行参数
+
+   ```shell
+   hadoop fs -help rm
+   ```
+
+3. -ls: 显示目录信息
+
+   ```shell
+   hadoop fs -ls /
+   ```
+
+4. -mkdir: 创建目录
+
+   ```shell
+   hadoop fs -mkdir -p /data/bigdata/new_dir
+   ```
+
+5. 
+
+6. 
+
+7. 
+
+8. 
+
+   
+
+   
+
 
 
 
