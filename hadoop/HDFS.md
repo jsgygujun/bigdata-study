@@ -97,92 +97,108 @@
 5. -moveFromLocal: 从本地剪切粘贴到HDFS
 
    ```shell
-   hadoop fs -moveFromLocal ./local_file /data/bigdata/new_dir
+   hadoop fs -moveFromLocal ./localfile /user/hadoop/hadoopfile
    ```
 
 6. -appendToFile: 追加一个文件到已经存在的文件末尾
 
    ```shell
-   hadoop fs -appendToFile ./local_file /data/bigdata/new_dir/remote_file
+   hadoop fs -appendToFile ./localfile /user/hadoop/appendedfile
    ```
 
 7. -cat: 显示文件内容
 
+   ```shell
+   hadoop fs -cat /user/hadoop/hadoopfile
+   ```
+
 8. -tail: 显示一个文件的末尾
 
+   ```shell
+   hadoop fs -cat /usr/hadoop/hadoopfile
+   ```
+
 9. -chrgp/-chmod/-chown：与Linux系统中的用法一样，修改文件所属权限
+
+   ```shell
+   hadoop fs -chgrp group /sur/hadoop/hadoopfile
+   hadoop fs -chmod 777 /usr/hadoop/hadoopfile
+   hadoop fs -chown hadoop:bigdata -R /usr/hadoop
+   ```
 
 10. -copyFromLocal: 从本地文件系统拷贝文件到HDFS目录
 
     ```shell
-    hadoop fs -copyFromLocal README.md /data/bigdata/new_dir
+    hadoop fs -copyFromLocal localfile /usr/hadoop/hadoopfile
+    hadoop fs -copyFromLocal -f localfile /usr/hadoop/hadoopfile # 如果hadoopfile已经存在，则内容将被覆盖
     ```
 
 11. -copyToLocal: 从HDFS拷贝到本地
 
     ```shell
-    hadoop fs -copyToLocal /data/bigdata/new_dir/README.md ./
+    hadoop fs -copyToLocal /usr/hadoop/hadoopfile ~/bigdata/localfile
     ```
 
-12. -cp: 从HDFS的一个路径拷贝到HDFS的另一个路径
+12. -cp: 从HDFS的一个目录拷贝到HDFS的另一个目录
 
     ```shell
-    hadoop fs -cp /data/bigdata/old_dir/file.txt /data/bigdata/new_dir/file.txt
+    hadoop fs -cp /usr/hadoop/dir1/file.txt /usr/hadoop/dir2/file.txt
     ```
 
 13. -mv: 在HDFS目录之间移动文件
 
     ```shell
-    hadoop fs -mv /data/bigdata/old_dir/file.txt /data/bigdata/new_dir/file.txt
+    hadoop fs -mv /usr/hadoop/dir1/file.txt /usr/hadoop/dir2/file.txt
     ```
 
 14. -get: 等同-copyToLocal，从HDFS下载文件到本地
 
     ```shell
-    hadoop fs -get /data/bigdata/new_dir/file.txt ./
+    hadoop fs -get /usr/hadoop/hadoopfile ~/bigdata/localfile
     ```
 
-15. -getmerge： 合并下载多个文件，例如HDFS的目录/data/bigdata/aaa/目录下有文件log.1,log.2,...
+15. -getmerge： 合并下载多个文件，例如HDFS的目录/usr/hadoop/目录下有文件log.1,log.2,...
 
     ```shell
-    hadoop fs -getmerge /data/bigdata/aaa/* ./merged_log.txt
+    hadoop fs -getmerge /usr/hadoop/* ~/bigdata/log.txt
     ```
 
 16. -put: 等同-copyFromLocal，从本地上传文件到HDFS
 
     ```shell
-    hadoop fs -put ./README.md /data/bigdata/new_dir/
+    hadoop fs -put ~/bigdata/localfile /usr/hadoop/hadoopfile
     ```
 
 17. -rm: 删除文件或文件夹
 
     ```shell
-    hadoop fs -rm /data/bigdata/new_dir/file.txt
+    hadoop fs -rm /usr/hadoop/hadoopfile
+    hadoop fs -rm -r /usr/hadoop # -r 递归删除文件和子目录
     ```
 
 18. -rmdir: 删除空目录
 
     ```shell
-    hadoop fs -rmdir /data/bigdata/new_dir
+    hadoop fs -rmdir /usr/hadoop/data
     ```
 
 19. -df: 统计文件系统的可用空间信息
 
     ```shell
-    hadoop fs -df -h /
+    hadoop fs -df -h /  # -h 人类可读的大小信息，如64m
     ```
 
-20. -du： 统计文件夹的大小信息
+20. -du： 统计文件和文件夹的占用空间大小
 
     ```shell
-    hadoop fs -du -h /data/bigdata/new_dir
-    hadoop fs -du -s -h /data/bigdata/new_dir
+    hadoop fs -du -h  /usr/hadoop/data # -h 人类可读的大小信息，如64m
+    hadoop fs -du -s -h  /usr/hadoop/data # -s 文件或文件目录占用大小的汇总，若不指定则以深度为1递归计算文件和子目录占用空间大小信息。
     ```
 
 21. -setrep: 设置HDFS中文件的副本数量
 
     ```shell
-    hadoop fs -setrep 2 /data/bigdata/new_dir/file.txt
+    hadoop fs -setrep 2 /usr/hadoop/hadoop.txt
     ```
 
 ## 三、HDFS 客户端操作
