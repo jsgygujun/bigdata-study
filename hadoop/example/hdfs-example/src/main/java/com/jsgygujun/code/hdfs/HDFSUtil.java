@@ -51,7 +51,7 @@ public class HDFSUtil {
      */
     @Test
     public void mkdir_with_permission() throws Exception {
-        fs.mkdirs(new Path("data/dir2"), new FsPermission(FsAction.READ_WRITE, FsAction.READ, FsAction.READ));
+        fs.mkdirs(new Path("/data/dir2"), new FsPermission(FsAction.READ_WRITE, FsAction.READ, FsAction.READ));
     }
 
     /**
@@ -106,7 +106,7 @@ public class HDFSUtil {
      */
     @Test
     public void delete() throws Exception {
-        boolean result = fs.delete(new Path("/data/dir1/hello.txt"), true);
+        boolean result = fs.delete(new Path("/data/dir1/hello2.txt"), true);
         System.out.println(result);
     }
 
@@ -140,7 +140,7 @@ public class HDFSUtil {
     @Test
     public void copy_from_local() throws Exception {
         Path localPath = new Path("/tmp/hello.txt");
-        Path hadoopPath = new Path("/data/hello.txt");
+        Path hadoopPath = new Path("/data/dir2/hello.txt");
         fs.copyFromLocalFile(localPath, hadoopPath);
     }
 
