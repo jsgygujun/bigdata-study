@@ -11,7 +11,7 @@
 ## 1.2 Hadoop组成
 
 1. Hadoop HDFS: 高可靠、高吞吐量的分布式文件系统。
-2. Hadoop Mapreduce： 一个分布式的离线并行计算框架。
+2. Hadoop MapReduce： 一个分布式的离线并行计算框架。
 3. Hadoop YARN： 作业调度和集群资源管理的框架。
 4. Hadoop Common： 支持其他模块的工具模块（Configuration、RPC、序列化机制、日志操作等）
 
@@ -26,4 +26,4 @@
 
 * [HDFS](HDFS.md)
 * YARN
-* Mapreduce
+* [MapReduce](MapReduce.md)
