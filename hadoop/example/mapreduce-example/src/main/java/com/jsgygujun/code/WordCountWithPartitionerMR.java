@@ -7,13 +7,14 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
 
-public class WordCountMR {
+public class WordCountWithPartitionerMR {
 
     public static class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         Text text = new Text();
@@ -46,6 +47,13 @@ public class WordCountMR {
         }
     }
 
+    public static class WordCountPartitioner extends Partitioner<Text, IntWritable> {
+        @Override
+        public int getPartition(Text key, IntWritable value, int numPartitions) {
+            return key.toString().charAt(0) % numPartitions; // 根据单词首字母ASCII奇偶来分区
+        }
+    }
+
     /**
      * hadoop jar mapreduce-example-0.9-SNAPSHOT.jar com.jsgygujun.code.WordCountMR /data/mapreduce/word-count/input /data/mapreduce/word-count/output
      * @param args
@@ -57,7 +65,7 @@ public class WordCountMR {
         Job job = Job.getInstance(conf);
 
         // 2. 设置jar加载路径
-        job.setJarByClass(WordCountMR.class);
+        job.setJarByClass(WordCountWithPartitionerMR.class);
 
         // 3. 设置Map和Reduce类
         job.setMapperClass(WordCountMapper.class);
@@ -67,16 +75,21 @@ public class WordCountMR {
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
 
-        // 5. 设置Reduce输出
+        // 5. 设置Partitioner
+        job.setPartitionerClass(WordCountPartitioner.class);
+
+        // 6. 设置Reduce输出
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
+        job.setNumReduceTasks(2);
 
-        // 6. 设置输入和输出路径
+        // 7. 设置输入和输出路径
         FileInputFormat.setInputPaths(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        // 7. 提交
+        // 8. 提交
         boolean result = job.waitForCompletion(true);
         System.exit(result ? 0 : 1);
     }
+
 }
