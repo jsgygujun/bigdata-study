@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class WordCountWithPartitionerMR {
 
-    public static class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+    private static class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         Text text = new Text();
         IntWritable one = new IntWritable(1);
 
@@ -34,7 +34,7 @@ public class WordCountWithPartitionerMR {
         }
     }
 
-    public static class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+    private static class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         @Override
         protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             // 1. 累加求和
@@ -47,7 +47,7 @@ public class WordCountWithPartitionerMR {
         }
     }
 
-    public static class WordCountPartitioner extends Partitioner<Text, IntWritable> {
+    private static class WordCountPartitioner extends Partitioner<Text, IntWritable> {
         @Override
         public int getPartition(Text key, IntWritable value, int numPartitions) {
             return key.toString().charAt(0) % numPartitions; // 根据单词首字母ASCII奇偶来分区

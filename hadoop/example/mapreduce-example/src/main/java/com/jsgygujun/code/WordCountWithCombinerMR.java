@@ -13,7 +13,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
 
-public class WordCountMR {
+public class WordCountWithCombinerMR {
 
     private static class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         Text text = new Text();
@@ -46,6 +46,20 @@ public class WordCountMR {
         }
     }
 
+    // 在统计单词频率应用中Combiner和Reducer是一样的。
+    private static class WordCountCombiner extends Reducer<Text, IntWritable, Text, IntWritable> {
+        @Override
+        protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+            // 1. 累加求和
+            int sum = 0;
+            for (IntWritable count : values) {
+                sum += count.get();
+            }
+            // 2. 输出
+            context.write(key, new IntWritable(sum));
+        }
+    }
+
     /**
      * hadoop jar mapreduce-example-0.9-SNAPSHOT.jar com.jsgygujun.code.WordCountMR /data/mapreduce/word-count/input /data/mapreduce/word-count/output
      * @param args
@@ -57,15 +71,18 @@ public class WordCountMR {
         Job job = Job.getInstance(conf);
 
         // 2. 设置jar加载路径
-        job.setJarByClass(WordCountMR.class);
+        job.setJarByClass(WordCountWithCombinerMR.class);
 
         // 3. 设置Map和Reduce类
-        job.setMapperClass(WordCountMapper.class);
-        job.setReducerClass(WordCountReducer.class);
+        job.setMapperClass(WordCountWithCombinerMR.WordCountMapper.class);
+        job.setReducerClass(WordCountWithCombinerMR.WordCountReducer.class);
 
         // 4. 设置Map输出
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
+
+        // 5. 设置Combiner
+        job.setCombinerClass(WordCountCombiner.class);
 
         // 5. 设置Reduce输出
         job.setOutputKeyClass(Text.class);
