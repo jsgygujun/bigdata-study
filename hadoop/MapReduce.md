@@ -106,9 +106,121 @@ Java 的序列化是一个**重量级**序列化框架（Serializable），一�
 
 ## 三、MapReduce框架原理
 
+### 3.1 MapReduce工作流程
+
+### 3.2 InputFormat数据输入
+
+### 3.3 MapTask工作机制
+
+### 3.4 Shuffle机制
+
+### 3.5 ReduceTask工作机制
+
+### 3.6 OutputFormat数据输出
+
+### 3.7 Join多种应用
+
+### 3.8 数据清洗（ETL）
+
+1. 概述
+
+   在运行核心业务 Mapreduce 程序之前，往往要先对数据进行清洗，清理掉不符合用户要 求的数据。清理的过程往往只需要运行 mapper 程序，不需要运行 reduce 程序。
+
+2. 案例： 日志清洗
+
+### 3.9 计数器应用
+
+Hadoop 为每个作业维护若干内置计数器，以描述多项指标。例如，某些计数器记录已处理的字节数和记录数，使用户可监控已处理的输入数据量和已产生的输出数据量。
+
+1. API
+
+   1. 采用枚举的方式统计计数
+
+      ```java
+      enum MyCounter{MALFORORMED,NORMAL}
+      // 对枚举定义的自定义计数器加1
+      context.getCounter(MyCounter.MALFORORMED).increment(1);
+      ```
+
+   2. 采用计数器组、计数器名称的方式统计
+
+      ```java
+      context.getCounter("counterGroup", "countera").increment(1);
+      ```
+
+      组名和计数器名称随便起，但最好有意义。
+
+   3. 计数结果在程序运行后的控制台上查看。
+
+2. 案例
+
+### 3.10 MapReduce开发总结
+
+在编写MapReduce程序时，需要考虑一下几个方面：
+
+1. 输入数据接口： InputFormat
+2. 逻辑处理接口： Mapper
+3. Partitioner 分区
+4. Comparable 排序
+5. Combiner 合并
+6. Reduce端分组： GroupingComparator
+7. 逻辑处理接口： Reducer
+8. 输出数据接口： OutputFormat
+
 ## 四、Hadoop数据压缩
 
 ## 五、Hadoop优化
+
+### 5.1 MapReduce跑的慢的原因
+
+Mapreduce 程序效率的瓶颈在于两点：
+
+1. 计算机性能
+
+   CPU、内存、磁盘、网络。
+
+2. IO操作优化
+
+   1. 数据倾斜
+   2. map和reduce数设置不合理
+   3. map运行时间太长，导致reduce等待过久
+   4. 小文件过多
+   5. 大量的不可分块的超大文件
+   6. spill次数过多
+   7. merge次数过多
+
+### 5.2 MapReduce 优化方法
+
+MapReduce 优化方法主要从七个方面考虑:数据输入、Map 阶段、Reduce 阶段、IO 传输、数据倾斜、小文件优化和常用的调优参数。
+
+#### 5.2.1 数据输入
+
+1. **合并小文件**：在执行 mr 任务前将小文件进行合并，大量的小文件会产生大量的 map 任务，增大 map 任务装载次数，而任务的装载比较耗时，从而导致 mr 运行较慢。
+2. 采用 CombineTextInputFormat 来作为输入，解决输入端大量小文件场景。
+
+#### 5.2.2 Map 阶段
+
+1. **减少溢写(spill)次数**：通过调整 io.sort.mb 及 sort.spill.percent 参数值，增大触发 spill 的内存上限，减少 spill 次数，从而减少磁盘 IO。
+2. **减少合并(merge)次数**：通过调整 io.sort.factor 参数，增大 merge 的文件数目，减少 merge 的次数，从而缩短 mr 处理时间。
+3. 在 map 之后，不影响业务逻辑前提下，先进行 combine 处理，减少 I/O。
+
+#### 5.2.3 Reduce 阶段
+
+1. **合理设置 map 和 reduce 数**： 两个都不能设置太少，也不能设置太多。太少，会导致 task 等待，延长处理时间；太多，会导致 map、reduce 任务间竞争资源，造成处理超时等错误。
+2. **设置 map、reduce 共存**： 调整 slowstart.completedmaps 参数，使 map 运行到一定程 度后，reduce 也开始运行，减少 reduce 的等待时间。
+3. **规避使用 reduce**： 因为 reduce 在用于连接数据集的时候将会产生大量的网络消耗。
+4. **合理设置 reduce 端的 buffer**： 默认情况下，数据达到一个阈值的时候，buffer 中的数据就会写入磁盘，然后 reduce 会从磁盘中获得所有的数据。也就是说，buffer 和 reduce是没有直接关联的，中间多个一个写磁盘->读磁盘的过程，既然有这个弊端，那么就可以通过参数来配置，使得 buffer 中的一部分数据可以直接输送到 reduce，从而减少 IO 开销：mapred.job.reduce.input.buffer.percent，默认为 0.0。当值大于 0 的时候，会保留指定比例的内存读 buffer 中的数据直接拿给 reduce 使用。这样一来，设置 buffer 需要内存，读取数据需要内存，reduce 计算也要内存，所以要根据作业的运行情况进行调整。
+
+#### 5.2.4 IO 传输
+
+1. **采用数据压缩的方式**： 减少网络 IO 的的时间。安装 Snappy 和 LZO 压缩编码器。
+2. **使用 SequenceFile 二进制文件**
+
+#### 5.2.5 数据倾斜问题
+
+#### 5.2.6 小文件优化
+
+#### 5.2.7 常用的调优参数
 
 ## 六、实战
 
