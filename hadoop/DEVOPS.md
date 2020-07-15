@@ -25,7 +25,8 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop-13
 
 ### 2.2 安装 xsync 集群分发脚本
 
-脚本代码如下：
+`xsync` 脚本代码如下：
+
 ```shell
 #!/bin/bash
 
@@ -52,9 +53,33 @@ done
 
 ### 2.3 安装 JDK 并配置环境
 
+安装目录 `/opt/applications`
+
+```shell
+tar -xzvf jdk-8u251-linux-x64.tar.gz -C /opt/application/
+# 修改环境变量
+vim ~/.bash_profile
+JAVA_HOME=/opt/applications/jdk1.8.0_251
+PATH=$PATH:$JAVA_HOME/bin
+# 使配置生效
+source ~/.bash_profile
+```
+
 ## 三、集群搭建
 
 ### 3.1 安装Hadoop 并配置环境变量
+
+安装目录 `/opt/applications`
+
+```shell
+tar -xzvf hadoop-2.6.0-cdh5.11.0.tar.gz -C /opt/application/
+# 修改环境变量
+vim ~/.bash_profile
+HADOOP_HOME=/opt/applications/hadoop-2.6.0-cdh5.11.0
+PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+# 使配置生效
+source ~/.bash_profile
+```
 
 ### 3.2 配置集群
 
@@ -122,13 +147,13 @@ done
 
 * slaves
 
+  告诉 Hadoop 集群中有哪些机器，slave文件列举可以运行 DataNode 和 NodeManager 的机器
+
   ```xml
   hadoop-11
   hadoop-12
   hadoop-13
   ```
-
-  
 
 * yarn-env.sh
 
@@ -184,6 +209,12 @@ hdfs namenode -format
 start-dfs.sh
 ```
 
+`start-dfs.sh` 脚本所做的事情如下：
+
+1. 在每台机器上启动一个 NameNode，这些机器由执行 `hdfs getconf -namenodes` 得到的返回值所确定。
+2. 在 sl ave 文件列举的每台机器上启动一个 DataNode。
+3. 在每台机器上启动一个 Secondary NameNode，这些机器由执行 `hdfs getconf -secondarynamenodes` 得到的返回值所确定。
+
 停止 HDFS 集群
 
 ```shll
@@ -197,6 +228,11 @@ stop-dfs.sh
 ```shll
 start-yarn.sh
 ```
+
+`start-yarn.sh` 脚本所做的事情如下：
+
+1. 在本地机器上启动一个 ResourceManager。
+2. 在 sl ave 文件列举的每台机器上启动一个 NodeManager。
 
 停止 YARN 集群
 

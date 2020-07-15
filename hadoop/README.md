@@ -27,3 +27,4 @@
 * [HDFS](HDFS.md)
 * YARN
 * [MapReduce](MapReduce.md)
+* [Hadoop集群搭建](DEVOPS.md)
