@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 public class HDFSUtil {
 
     private static final String HDFS_URI = "hdfs://hadoop-11:9000";
-    private static final String HDFS_USR = "bigdata";
+    private static final String HDFS_USR = "hadoop";
 
     // HDFS 文件系统
     private FileSystem fs;
