@@ -423,13 +423,20 @@ Hadoop2.7.2副本节点选择：
       > 先记录操作日志，然后在内存中进行操作。
 2. 第二阶段： Secondary NameNode 工作
    1. Secondary NameNode 询问 NameNode 是否需要 checkpoint。直接带回 NameNode 是否检查结果。
+   
    2. Secondary NameNode 请求执行 checkpoint。
-   3. NameNode 滚动正在写的 edits 日志。
-   4. 将滚动前的编辑日志和镜像文件拷贝到 Secondary NameNode。
-   5. Secondary NameNode 加载编辑日志和镜像文件到内存，并合并。
-   6. 生成新的镜像文件 fsimage.chkpoint。
-   7. 拷贝 fsimage.chkpoint 到 NameNode。
-   8. NameNode 将 fsimage.chkpoint 重新命名成 fsimage。
+   
+   3. NameNode 滚动正在写的 edits 日志（停止写旧 edits，开始写新 edits） 。
+   
+   4. 将滚动前的 edits 和 fsimage 拷贝到 Secondary NameNode。
+   
+   5. Secondary NameNode 加载 edits 和 fsimage 到内存，执行合并操作生成新的镜像文件 fsimage.chkpoint。
+   
+   6. Secondary NameNode 拷贝 fsimage.chkpoint 到 NameNode。
+   
+   7. NameNode 将 fsimage.chkpoint 重新命名成 fsimage。
+   
+      > Secondary NameNode 实际工作就是辅助 NameNode 定期合并 fsiamge 和 edits 为一个新的 fsimage。
 
 ## 六、DataNode 工作机制
 
