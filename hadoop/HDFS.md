@@ -447,6 +447,13 @@ Hadoop2.7.2副本节点选择：
 3. 心跳是每3秒一次，心跳返回结果带有 NameNode 给 DataNode 的命令如复制块数据到另一台机器，或删除某个数据块。如果超过10分钟没有收到某个 DataNode 的心跳，则认为该节点不可用。
 4. 集群运行中可以安全的加入和退出一些机器。
 
+### 6.2 数据完整性 （checksum机制）
+
+1. 当 DataNode 读取 Block 的时候，它会计算 checksum。
+2. 如果计算后的 checksum，与 Block 创建时的 checksum 值不一样，说明 Block 已经损坏了。
+3. DataNode 会通知 NameNode 让客户端读取其它 DataNode 上的 Block。
+4. DataNode 在其 Block 创建后周期验证 checksum。
+
 
 
 
