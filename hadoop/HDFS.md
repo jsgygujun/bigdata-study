@@ -412,10 +412,15 @@ Hadoop2.7.2副本节点选择：
 ### 5.1 NameNode & Secondary NameNode 工作机制
 
 1. 第一阶段： NameNode 启动
-   1. 第一次启动 NameNode 格式化后，创建 fsimage 和 edits 文件。如果不是第一次启动，直接夹在编辑日志和镜像文件到内存。
-   2. 客户端对元数据进行增删改查的请求。
+   1. **第一次**启动 NameNode 格式化后，创建 fsimage 和 edits 文件。如果不是第一次启动，直接加载 fsimage 和 edits 到内存。
+   
+   2. 客户端对元数据进行**增删改**的请求。
+   
    3. NameNode 记录操作日志，更新滚动日志。
+   
    4. NameNode 在内存中对数据进行增删改查。
+   
+      > 先记录操作日志，然后在内存中进行操作。
 2. 第二阶段： Secondary NameNode 工作
    1. Secondary NameNode 询问 NameNode 是否需要 checkpoint。直接带回 NameNode 是否检查结果。
    2. Secondary NameNode 请求执行 checkpoint。
