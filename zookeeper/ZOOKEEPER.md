@@ -258,7 +258,9 @@ ZooKeeper 不适合用作海量数据存储，对于海量应用数据的存储�
   }
   ```
 
-  
+  ### 4.3 使用 Curator 
+
+  Curator 是 Netflix 公司开源的一套 Zookeeper 客户端框架，解决了很多 Zookeeper 客户端非常底层的细节开发工作，包括连接重连、反复注册Watcher和NodeExistsException异常等等。
 
 ## 五、 ZooKeeper 集群搭建
 
