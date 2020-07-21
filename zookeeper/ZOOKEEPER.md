@@ -192,7 +192,7 @@ ZooKeeper 不适合用作海量数据存储，对于海量应用数据的存储�
 <dependency>
   <groupId>org.apache.zookeeper</groupId>
   <artifactId>zookeeper</artifactId>
-  <version>3.4.10</version>
+  <version>3.4.14</version>
 </dependency>
 ```
 
