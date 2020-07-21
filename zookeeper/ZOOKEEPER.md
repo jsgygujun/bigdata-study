@@ -61,9 +61,128 @@ ZooKeeper 不适合用作海量数据存储，对于海量应用数据的存储�
 5. ZooKeeper 监听到有数据或路径变化，就会将这个消息发送给 listener 线程
 6. Listener 线程内部调用 `process()` 方法
 
+### 2.3 Paxos 算法
+
+### 2.4 选举机制
+
+### 2.5 写数据流程
+
 ## 三、 ZooKeeper 常用命令
 
+### 3.1 集群命令
 
+* 启动集群
+
+  ```shell
+  zkServer.sh start
+  ```
+
+* 查看状态
+
+  ```shell
+  zkServer.sh status
+  ```
+
+* 停止集群
+
+  ```shell
+  zkServer.sh stop
+  ```
+
+### 3.2 客户端命令
+
+* 启动客户端
+
+  ```shell
+  zkCli.sh
+  ```
+
+* 推出客户端
+
+  ```shell
+  quit
+  ```
+
+  
+
+* 显示所有操作命令
+
+  ```shell
+  help
+  ```
+
+* 查看当前 zone 中所包含的内容
+
+  ```shell
+  ls /
+  ```
+
+* 查看当前 zone 详细数据
+
+  ```shell
+  ls2 /
+  ```
+
+* 创建普通节点
+
+  ```shell
+  create /path/to/znode "data"
+  ```
+
+* 获得节点的数据
+
+  ```shell
+  get /path/to/znode
+  ```
+
+* 创建临时节点
+
+  ```shell
+  create -e /path/to/znode "data"
+  ```
+
+* 创建带序号的节点
+
+  ```shell
+  create -s /path/to/znode/node1 "node1"
+  create -s /path/to/znode/node2 "node2"
+  ```
+
+* 修改节点数据
+
+  ```shell
+  set /path/to/znode "new-data"
+  ```
+
+* 监听节点数据
+
+  ```shell
+  get /path/to/znode watch
+  ```
+
+* 监听节点的子节点
+
+  ```shell
+  ls /path/to/parent/znode watch
+  ```
+
+* 删除节点
+
+  ```shell
+  delete /path/to/znode
+  ```
+
+* 递归删除节点
+
+  ```shell
+  rmr /path/to/parent/znode
+  ```
+
+* 查看节点状态
+
+  ```shell
+  stat /path/to/znode
+  ```
 
 ## 四、ZooKeeper 常用 Java API
 
