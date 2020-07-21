@@ -38,7 +38,7 @@ public class ZKClientUtil {
     }
 
     /**
-     * 创建子节点
+     * 创建节点
      * @throws Exception
      */
     @Test
@@ -48,7 +48,7 @@ public class ZKClientUtil {
     }
 
     /**
-     * 获取子节点并监听节点变化
+     * 获取子节点数据并监听节点变化
      * @throws Exception
      */
     @Test
