@@ -2,3 +2,6 @@
 /hadoop/example/hadoop-example.iml
 /hadoop/example/hdfs-example/hdfs-example.iml
 /hadoop/example/mapreduce-example/mapreduce-example.iml
+/zookeeper/example/zookeeper-example.iml
+/zookeeper/example/zkclient-example/zkclient-example.iml
+/zookeeper/example/zkclient-example/target/
