@@ -54,13 +54,163 @@ Hive 通过给用户提供的一系列交互接口，接收到用户的指令(SQ
    3. 优化器(Query Optimizer):对逻辑执行计划进行优化。
    4. 执行器(Execution):把逻辑执行计划转换成可以运行的物理计划。对于 Hive 来 说，就是 MR/Spark。
 
+### 1.4 Hive 数据存储
+
+* Hive 要分析的数据存储在 HDFS 上
+  * Hive 中的库的位置，在 HDFS 上就是一个目录。
+  * Hive 中的表的位置，在 HDFS 上也是一个目录，在所在库目录下创建了一个字目录。
+  * Hive 中的数据，是存在表目录中的文件。
+* Hive 中存储的数据必须是结构化数据，而且
+  * 这个数据的格式要和表的属性紧密相关
+  * 表在创建时，有分隔符属性，这个分隔符属性，代表在执行 MR 程序时，使用哪个分隔符去分隔每一行中的字段。
+  * Hive 中默认字段的分隔： ctrl+A，vim 进入编辑模式，先 ctrl+V 再 ctrl+A
+* Hive 中的元数据（schema）存储在关系型数据库
+  * 表的信息都存储在 `tbls`表中，通过`db_id`和`dbs`表中的库进行外键约束
+  * 库的信息都存储在 `dbs` 表中
+  * 字段信息存在column_v2表中，通过`CD_ID`和表的主键进行外键约束
+
 ## 二、Hive 客户端安装
 
 ## 三、Hive 数据类型
 
 ## 四、DDL 数据定义
 
+### 4.1 库的常用操作
+
+* 增
+
+  ```shell
+  CREATE (DATABASE|SCHEMA) [IF NOT EXISTS] database_name
+  [COMMENT database_comment]  // 库的注释说明
+  [LOCATION hdfs_path]        // 库在hdfs上的路径
+  [WITH DBPROPERTIES (property_name=property_value, ...)]; // 库的属性
+  create database  if not exists mydb2 
+  comment 'this is my db' 
+  location 'hdfs://hadoop-101:9000/mydb2' 
+  with dbproperties('ownner'='jack','tel'='12345','department'='IT');
+  ```
+
+* 删
+
+  ```shell
+  drop database 库名 // 只能删除空库
+  drop database 库名 cascade // 删除非空库
+  ```
+
+* 改
+
+  ```shell
+  use 库名： 切换库
+  alter database mydb2 set dbproperties('ownner'='tom','empid'='10001'); //同名的属性值会覆盖，之前没有的属性会新增
+  ```
+
+* 查
+
+  ```shell
+  show databases: 查看当前所有的库
+  show tables in database: 查看库中所有的表
+  desc database 库名： 查看库的描述信息
+  desc database extended 库名： 查看库的详细描述信息
+  ```
+
+### 4.2 表的常用操作
+
+* 增
+
+  ```shell
+  CREATE [EXTERNAL] TABLE [IF NOT EXISTS] table_name 
+  [(col_name data_type [COMMENT col_comment], ...)]   //表中的字段信息
+  [COMMENT table_comment] //表的注释
+  
+  [PARTITIONED BY (col_name data_type [COMMENT col_comment], ...)] // 创建分区表
+  [CLUSTERED BY (col_name, col_name, ...) // 创建分桶表
+  [SORTED BY (col_name [ASC|DESC], ...)] INTO num_buckets BUCKETS] // 分桶后排序
+  
+  [ROW FORMAT row_format]  // 表中数据每行的格式，定义数据字段的分隔符，集合元素的分隔符等
+  
+  [STORED AS file_format] // 表中的数据要以哪种文件格式来存储，默认为TEXTFILE（文本文件）可以设置为SequnceFile或 Paquret,ORC等
+  [LOCATION hdfs_path]  //表在hdfs上的位置
+  
+  ```
+
+  1. 建表时，不带`EXTERNAL`，创建的是`MANAGED_TABLE`（管理表，内部表）。
+
+  2. 外部表和内部表的区别：内部表(管理表)在执行删除操作时，会将表的元数据(schema)和表位置的数据一起删除；外部表在执行删除表操作时，只删除表的元数据(schema)
+
+  3. 在企业中，创建的都是外部表，在Hive中表是廉价的，数据是珍贵的。
+
+  4. 建表语句执行时：
+
+     1. Hive 会在 HDFS 生成表的路径
+     2. Hive 还会在 MySQL 的metastore 库中插入两条表的信息（元数据）
+
+  5. 管理表（内部表）和外部表之间的转换
+
+     1. 将表改为外部表
+
+        ```shell
+        alter table p1 set tblproperties('EXTERNAL'='TRUE')
+        ```
+
+     2. 将表改为管理表
+
+        ```shell
+        alter table p1 set tblproperties('EXTERNAL'='FALSE')
+        ```
+
+        >在hive中语句中不区分大小写，但是在参数中严格区分大小写！
+
+* 删
+
+  ```shell
+  drop table 表名
+  ```
+
+* 改
+
+  1. 改表的属性
+
+     ```shell
+     alter table 表名 set tblproperties(属性=属性值)
+     ```
+
+  2. 对列进行调整
+
+     ```shell
+     alter table 表名 change [column] 旧列名 新列名 新列类型 [comment 新列的注释]  [FIRST|AFTER column_name] //调整列的顺序
+     alter table 表名 ADD|REPLACE COLUMNS (col_name data_type [COMMENT col_comment], ...) // 添加列和重置列
+     ```
+
+* 查
+
+  ```shell
+  desc 表名 // 查看表的描述
+  desc formatted 表名 // 查看表的详细描述
+  ```
+
+### 4.3 分区表
+
+在建表时，指定了PARTITIONED BY ，这个表称为分区表
+
+```shell
+[PARTITIONED BY (col_name data_type [COMMENT col_comment], ...)] 
+```
+
+* 分区的概念
+  * **MR**：在MapTask输出key-value时，为每个key-value计算一个区号，同一个分区的数据，会被同一个reduceTask处理这个分区的数据，最终生成一个结果文通过分区，将MapTask输出的key-value经过reduce后，分散到多个不同的结果文件中！件！				
+  * **Hive**：将表中的数据，分散到表目录下的多个子目录(分区目录)中
+* 分区的意义
+  1. 分区的目的是为了就数据，分散到多个子目录中，在执行查询时，可以只选择查询某些子目录中的数据，加快查询效率！
+  2. 只有分区表才有子目录(分区目录)
+  3. 分区目录的名称由两部分确定：  分区列列名=分区列列值
+  4. 将输入导入到指定的分区之后，数据会附加上分区列的信息！
+  5. 分区的最终目的是在查询时，使用分区列进行过滤！
+
 ## 五、DML 数据操作
+
+
+
+
 
 ## 六、查询
 
