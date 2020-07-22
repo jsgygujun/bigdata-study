@@ -206,6 +206,21 @@ Hive 通过给用户提供的一系列交互接口，接收到用户的指令(SQ
   4. 将输入导入到指定的分区之后，数据会附加上分区列的信息！
   5. 分区的最终目的是在查询时，使用分区列进行过滤！
 
+### 4.4 分桶表
+
+建表时指定了CLUSTERED BY，这个表称为分桶表。
+
+分桶： 和MR分区（Partitioner）是一个概念。
+
+```shell
+[CLUSTERED BY (col_name, col_name, ...) // 分桶的字段，是从表的普通字段中来取
+[SORTED BY (col_name [ASC|DESC], ...)] INTO num_buckets BUCKETS] 
+```
+
+* 分桶的意义
+
+  分桶本质上也是为了分散数据！在分桶后，可以结合hive提供的抽样查询，只查询指定桶的数据。在分桶时，也可以指定将每个桶的数据根据一定的规则来排序。如果需要排序，那么可以在CLUSTERED BY后根SORTED BY。
+
 ## 五、DML 数据操作
 
 
