@@ -1,8 +1,7 @@
-package com.jsgygujun.code.wordcount;
+package com.jsgygujun.code.flowbean;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -10,10 +9,10 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
 /**
- * 运行命令：
- * hadoop jar mapreduce-example-0.9-SNAPSHOT.jar com.jsgygujun.code.wordcount.WordCountDriver /data/wordcount/input /data/wordcount/output
+ * 统计手机号(String)的上行(long)，下行(long)，总流量(long)
+ * 手机号为key,Bean{上行(long)，下行(long)，总流量(long)}为value
  */
-public class WordCountDriver {
+public class FlowBeanDriver {
 
     public static void main(String[] args) throws Exception {
         // 1. 获取配置信息
@@ -21,22 +20,22 @@ public class WordCountDriver {
 
         // 2. 创建Job
         Job job = Job.getInstance(conf);
-        job.setJobName("word-count");
+        job.setJobName("flow-bean");
 
         // 3. 设置jar加载路径
-        job.setJarByClass(WordCountDriver.class);
+        job.setJarByClass(FlowBeanDriver.class);
 
         // 4. 设置Map和Reduce类
-        job.setMapperClass(WordCountMapper.class);
-        job.setReducerClass(WordCountReducer.class);
+        job.setMapperClass(FlowBeanMapper.class);
+        job.setReducerClass(FlowBeanReducer.class);
 
         // 5. 设置Map输出
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(IntWritable.class);
+        job.setMapOutputValueClass(FlowBean.class);
 
         // 6. 设置Reduce输出
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
+        job.setOutputValueClass(FlowBean.class);
 
         // 7. 设置输入和输出路径
         FileInputFormat.setInputPaths(job, new Path(args[0]));
@@ -46,5 +45,4 @@ public class WordCountDriver {
         boolean result = job.waitForCompletion(true);
         System.exit(result ? 0 : 1);
     }
-
 }
