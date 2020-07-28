@@ -5,3 +5,5 @@
 /zookeeper/example/zookeeper-example.iml
 /zookeeper/example/zkclient-example/zkclient-example.iml
 /zookeeper/example/zkclient-example/target/
+/hadoop/example/mapreduce-example/target/
+/hadoop/example/mapreduce-example/dependency-reduced-pom.xml
