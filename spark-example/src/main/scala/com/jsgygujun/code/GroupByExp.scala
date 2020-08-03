@@ -19,9 +19,10 @@ object GroupByExp {
     val rdd2 = rdd1.groupBy(_ % 2)
     val array = rdd2.collect()
     array.foreach(it => {
-      print(s"p${it._1}: ")
-      it._2.foreach(x => print(x + " "))
+      print(s"key: ${it._1} -> ") // key：func的返回值
+      it._2.foreach(x => print(x + " ")) // value：迭代器
       println()
     })
+    sc.stop()
   }
 }
