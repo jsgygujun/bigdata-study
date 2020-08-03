@@ -11,7 +11,7 @@ import org.apache.spark.{SparkConf, SparkContext}
  */
 object GroupByExp {
   def main(args: Array[String]): Unit = {
-    val conf = new SparkConf().setAppName("GlomExp").setMaster("local[2]")
+    val conf = new SparkConf().setAppName("GroupByExp").setMaster("local[2]")
     val sc = new SparkContext(conf)
     val list = List(1,2,3,4,5,6,7,8,9)
     val rdd1 = sc.parallelize(list, 2)
