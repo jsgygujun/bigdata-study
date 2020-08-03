@@ -7,3 +7,5 @@
 /zookeeper/example/zkclient-example/target/
 /hadoop/example/mapreduce-example/target/
 /hadoop/example/mapreduce-example/dependency-reduced-pom.xml
+/spark-example/spark-example.iml
+/spark-example/target/
