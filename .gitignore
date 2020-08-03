@@ -9,3 +9,4 @@
 /hadoop/example/mapreduce-example/dependency-reduced-pom.xml
 /spark-example/spark-example.iml
 /spark-example/target/
+/hadoop/example/hdfs-example/target/
