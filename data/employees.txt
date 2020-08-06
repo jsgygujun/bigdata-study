@@ -1,0 +1,5 @@
+name,salary
+Michael,30000
+Andy,19000
+Justin,40000
+Berta,24000
