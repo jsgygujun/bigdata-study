@@ -4,7 +4,7 @@ import org.apache.spark.sql.SparkSession
 
 /**
  *
- * @author gujun@qiyi.com
+ * @author jsgygujun@gmail.com
  * @since 2020/8/6 5:20 下午
  */
 object DataSourceExp {
