@@ -11,3 +11,5 @@
 /spark-example/target/
 /hadoop/example/hdfs-example/target/
 /spark/example/spark-core-example/spark-core-example.iml
+/flink/example/target/
+/flink/example/example.iml
