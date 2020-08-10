@@ -4,7 +4,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object GlomExp {
   def main(args: Array[String]): Unit = {
-    val conf = new SparkConf().setMaster("local[*]").setAppName("FlatMapExp")
+    val conf = new SparkConf().setMaster("local[*]").setAppName("GlomExp")
     val sc = new SparkContext(conf)
     glomDemo(sc)
     sc.stop()
