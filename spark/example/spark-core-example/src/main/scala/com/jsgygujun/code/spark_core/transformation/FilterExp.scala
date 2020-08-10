@@ -10,7 +10,7 @@ object FilterExp {
     sc.stop()
   }
 
-  def filterDemo(sc: SparkContext): Unit = {
+  private def filterDemo(sc: SparkContext): Unit = {
     val list = List(1, 3, 5, 7, 9, 2, 4, 6, 8)
     val rdd1 = sc.parallelize(list, 4)
     val rdd2 = rdd1.filter(_ % 3 != 0)

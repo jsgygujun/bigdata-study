@@ -14,7 +14,7 @@ object FlatMapExp {
    * flatMap
    * @param sc
    */
-  def flatMapDemo(sc: SparkContext): Unit = {
+  private def flatMapDemo(sc: SparkContext): Unit = {
     val list = List(1,3,5,7,9,2,4,6,8)
     val rdd1 = sc.parallelize(list, 4)
     val rdd2 = rdd1.flatMap(x => if (x % 2 == 0) List(x, x * x, x * x * x) else List[Int]())

@@ -10,7 +10,7 @@ object GroupByExp {
     sc.stop()
   }
 
-  def groupByDemo(sc: SparkContext): Unit = {
+  private def groupByDemo(sc: SparkContext): Unit = {
     val list = List(1, 3, 5, 7, 9, 2, 4, 6, 8)
     val rdd1 = sc.parallelize(list, 4)
     val rdd2 = rdd1.groupBy(x => x % 2)

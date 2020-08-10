@@ -20,7 +20,7 @@ object MapExp {
    *
    * @param sc
    */
-  def mapDemo(sc: SparkContext): Unit = {
+  private def mapDemo(sc: SparkContext): Unit = {
     val list = List(1, 3, 5, 7, 9, 2, 4, 6, 8)
     val rdd1 = sc.parallelize(list)
     val rdd2 = rdd1.map(_ * 2)
@@ -34,7 +34,7 @@ object MapExp {
    *
    * @param sc
    */
-  def mapPartitionsDemo(sc: SparkContext): Unit = {
+  private def mapPartitionsDemo(sc: SparkContext): Unit = {
     val list = List(1, 3, 5, 7, 9, 2, 4, 6, 8)
     val rdd1 = sc.parallelize(list)
     val rdd2 = rdd1.mapPartitions(it => {
@@ -50,7 +50,7 @@ object MapExp {
    *
    * @param sc
    */
-  def mapPartitionsWithIndexDemo(sc: SparkContext): Unit = {
+  private def mapPartitionsWithIndexDemo(sc: SparkContext): Unit = {
     val list = List(1, 3, 5, 7, 9, 2, 4, 6, 8)
     val rdd1 = sc.parallelize(list, 4)
     val rdd2 = rdd1.mapPartitionsWithIndex((index, it) => {
