@@ -16,7 +16,7 @@ object GroupByExp {
     val rdd2 = rdd1.groupBy(x => x % 2)
     rdd2.collect.foreach(println)
     val rdd3 = rdd2.map {
-      case (k, it) => (k, it.sum)
+      case (k, it) => (k, it.toList)
     }
     rdd3.collect.foreach(println)
   }
