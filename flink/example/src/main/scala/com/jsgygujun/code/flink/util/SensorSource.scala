@@ -12,7 +12,7 @@ import scala.util.Random
  * @since 2020/8/20 10:30 上午
  */
 /**
- * 传感器源，用来模拟传感器数据的生产
+ * 传感器数据源，用来模拟传感器数据的生产
  */
 class SensorSource extends RichParallelSourceFunction[SensorData] {
   // 数据源是否还在运行的标志
@@ -25,17 +25,16 @@ class SensorSource extends RichParallelSourceFunction[SensorData] {
   override def run(ctx: SourceFunction.SourceContext[SensorData]): Unit = {
     // 初始化随机数产生器
     val rand = new Random()
-    // 根据并行任务数产生传感器ID
-    val taskIdx = this.getRuntimeContext.getIndexOfThisSubtask
-    // 初始化传感器Id和温度
-    var currFTemp = (1 to 10).map(i => ("sensor_" + (taskIdx * 10 + i), 65 + (rand.nextGaussian() * 20)))
+    // 随机生成10个传感器温度值，并且不停在之前温度基础上更新（随机上下波动）
+    var currFTemp = (0 to 9).map(i => ("sensor_" + i, 65 + (rand.nextGaussian() * 20)))
+    // 无限循环，生成随机数据流
     while (running) {
-      // 更新温度
-      currFTemp = currFTemp.map(t => (t._1, t._2 + (rand.nextGaussian() * 0.5)))
+      // 在当前温度基础上，随机生成微小波动
+      currFTemp = currFTemp.map(data => (data._1, data._2 + (rand.nextGaussian() * 0.5)))
       // 获取当前时间
       val currTime = Calendar.getInstance.getTimeInMillis
-      // 发送新的传感器数据
-      currFTemp.foreach(t => ctx.collect(SensorData(t._1, currTime, t._2)))
+      // 包装成样例类，用ctx发出数据
+      currFTemp.foreach(data => ctx.collect(SensorData(data._1, currTime, data._2)))
       // 控制传感器数据生产速度
       Thread.sleep(100)
     }
