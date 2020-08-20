@@ -19,6 +19,7 @@ object ProcessFunctionTimers {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
+    env.getConfig.setAutoWatermarkInterval(1000L)
 
     // 添加数据源
     val sensorData = env
