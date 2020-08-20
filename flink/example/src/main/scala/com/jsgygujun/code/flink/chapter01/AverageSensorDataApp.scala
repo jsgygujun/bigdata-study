@@ -1,6 +1,6 @@
 package com.jsgygujun.code.flink.chapter01
 
-import com.jsgygujun.code.flink.util.{SensorData, SensorSource}
+import com.jsgygujun.code.flink.util.{SensorData, SensorSource, SensorTimeAssigner}
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
@@ -26,9 +26,7 @@ object AverageSensorDataApp {
     // 添加数据源，并设置水位线生产方式
     val sensorDataStream = env
       .addSource(new SensorSource)
-      .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor[SensorData](Time.seconds(5)) {
-        override def extractTimestamp(element: SensorData): Long = element.timestamp
-      })
+      .assignTimestampsAndWatermarks(new SensorTimeAssigner())
 
     val avgTempStream = sensorDataStream
       // 华氏度 转 摄氏度
