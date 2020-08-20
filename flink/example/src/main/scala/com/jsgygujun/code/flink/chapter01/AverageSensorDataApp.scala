@@ -3,7 +3,6 @@ package com.jsgygujun.code.flink.chapter01
 import com.jsgygujun.code.flink.util.{SensorData, SensorSource, SensorTimeAssigner}
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.TimeCharacteristic
-import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
 import org.apache.flink.streaming.api.scala.function.WindowFunction
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow
