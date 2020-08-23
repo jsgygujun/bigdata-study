@@ -6,5 +6,6 @@
 * [ZooKeeper](/zookeeper/ZOOKEEPER.md)
 * [HBase](/hbase/HBASE.md)
 * [Hive](/hive/HIVE.md)
+* [Spark](/spark/README.md)
 * [Flink](/flink/README.md)
 
