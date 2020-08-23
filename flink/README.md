@@ -2,6 +2,8 @@
 
 ## 目录
 * [Flink 基础知识](/flink/doc/Flink基础知识.md)
+* [Flink 安装部署](/flink/doc/Flink安装部署.md)
+* [Flink 流处理编程](/flink/doc/Flink流处理编程.md)
 
 ## Flink 集群架构
 
