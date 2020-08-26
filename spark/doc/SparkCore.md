@@ -71,7 +71,7 @@ RDD 特点
     val rdd = sc.makeRDD(Array(9,8,7,6,5,4,3,2,1))
     ```
 
-> [参考代码](src/main/scala/com/jsgygujun/code/spark_core/create/CreateRDDExp.scala)
+> [参考代码](/spark/example/spark-core-example/src/main/scala/com/jsgygujun/code/spark_core/create/CreateRDDExp.scala)
 
 ### 2.3 RDD 转换算子
 
