@@ -1,4 +1,4 @@
-package com.jsgygujun.code.spark_core
+package com.jsgygujun.code.spark_core.create
 
 import org.apache.spark.{SparkConf, SparkContext}
 
