@@ -3,9 +3,9 @@
 ## 目录
 
 * [Hadoop](/hadoop/README.md)
-* [ZooKeeper](/zookeeper/ZOOKEEPER.md)
-* [HBase](/hbase/HBASE.md)
-* [Hive](/hive/HIVE.md)
+* [ZooKeeper](/zookeeper/README.md)
+* [HBase](/hbase/README.md)
+* [Hive](/hive/README.md)
 * [Spark](/spark/README.md)
 * [Flink](/flink/README.md)
 
