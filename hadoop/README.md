@@ -24,7 +24,7 @@
 
 ## 二、目录
 
-* [HDFS](HDFS.md)
-* [YARN](YARN.md)
-* [MapReduce](MapReduce.md)
-* [Hadoop集群搭建](DEVOPS.md)
+* [HDFS](doc/HDFS.md)
+* [YARN](doc/YARN.md)
+* [MapReduce](doc/MapReduce.md)
+* [Hadoop集群搭建](doc/DEVOPS.md)
