@@ -1,3 +1,5 @@
+
+
 # Flink 流处理编程
 
 ## 一、 Flink 流处理 API
@@ -8,32 +10,129 @@
 
 * Environment
 
+  根据上下文自动创建环境（本地环境、提交到远程集群的环境）
+
   ```scala
   val env = StreamExecutionEnvironment.getExecutionEnvironment
   ```
 
   * 独立执行
+
+    ```scala
+    val env = StreamExecutionEnvironment.createLocalEnvironment()
+    ```
+
   * 提交到集群执行
+
+    ```scala
+    val env = StreamExecutionEnvironment.createRemoteEnvironment(host: String, port: Int, jarFiles: String*)
+    ```
 
 * Source
 
+  使用 `StreamExecutionEnvironment.addSource(sourceFunction)` 来为应用程序添加输入源。
+
   * 从集合读取数据
+    * fromCollection(Seq)
+    * fromCollection(Iterator)
+    * fromElement(element: _*)
+    * fromParallelCollections(SplittableIterator)
+    * generateSequence(from, to)
   * 从文件读取数据
-  * 从 Kafka 读取数据
-  * 自定义 Source
+    * readTextFile(path)
+    * readFile(fileInputFormat, path)
+    * readFile(fileInputFormat, path, watchType, interval, pathFilter)
+  * 自定义 Source，如从 Kafka 读取 
+    * addSource
+      * addSource(new FlinkKafkaConsumer010<>(...))
 
 * Transformation 转换算子
 
   * 基本转换算子
+
+    * map
+
+      * 一进一出
+
+        ```scala
+        dataStream.map(x => x * 2)
+        ```
+
+    * flatMap
+
+      * 一进N出，N=0,1,2...
+
+        ```scala
+        dataStream.flatMap(_.split("\t"))
+        ```
+
+    * filter
+
+      * 过滤
+
+        ```scala
+        dataStream.filter(_ != 0)
+        ```
+
   * 分区转换算子
+
+    * keyBy
+
+      * 在逻辑上将一个流分成不相交的分区，每个分区包含相同键的元素。在内部，这是通过哈希分区实现的。
+
+        ```scala
+        dataStream.keyBy("someKey")
+        dataStream.keyBy(0)
+        ```
+
+    * reduce
+
+      * 合并当前的元素和上次聚合的结果，产生一个新的值，返回的流中包含每一次聚合的结果，而不是只返回最后一次聚合的最终结果
+
+        ```scala
+        keyedStream.reduce { _ + _ }
+        ```
+
+    * fold
+
+      * 具有初始值的键控数据流上的“滚动”折叠。将当前元素与最后折叠的值合并，并发出新值。
+
+        ```scala
+        // 一种折叠函数，当应用于序列（1,2,3,4,5）时，发出序列“start-1”，“start-1-2”，“start-1-2-3”。。
+        val result: DataStream[String] = keyedStream.fold("start")((str, i) => str + "-" + i)
+        ```
+
+    * aggregations
+
+      * 在键控数据流上滚动聚合。min和minBy之间的区别在于min返回最小值，而minBy返回该字段中具有最小值的元素（max和maxBy也是一样）。
+
+        ```scala
+        keyedStream.sum(0)
+        keyedStream.sum("key")
+        keyedStream.min(0)
+        keyedStream.min("key")
+        keyedStream.max(0)
+        keyedStream.max("key")
+        keyedStream.minBy(0)
+        keyedStream.minBy("key")
+        keyedStream.maxBy(0)
+        keyedStream.maxBy("key")
+        ```
+
   * 多流转换算子
 
 * Sink
 
+  * writeAsText() / TextOutputFormat
+  * writeAsCsv(...) / CsvOutputFormat
+  * print() / printToErr()
+  * writeUsingOutputFormat()
+  * writeToSocket
+  * addSink
   * Kafka
-  * Redis
-  * Elasticsearch
-  * JDBC
+    * Redis
+    * Elasticsearch
+    * JDBC
 
 * 支持的数据类型
 
